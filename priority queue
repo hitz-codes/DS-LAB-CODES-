@@ -1,0 +1,45 @@
+#include<stdio.h>
+
+int data[10],prio[10];
+int n=0;
+void insert(int val , int pr){
+    data[n]=val;
+    prio[n]=pr;
+    n++;
+}
+void Delete(){
+    if(n==0){
+        printf("Queue is empty");
+        return;
+    }
+    int pos=0;
+    for(int i=1;i<n;i++){
+        if (prio[i]<prio[pos])
+        pos=i;
+    }
+    printf(" Deleted %d priority %d" , data[pos], prio[pos]);
+    for(int i=0;i<n;i++){
+        data[i]=data[i+1];
+        prio[i]=prio[i+1];
+    }n--;
+}
+void display(){
+    if (n==0){
+        printf("Queue empty");
+        return;
+    }
+    printf("the elements of the queue are ");
+    for(int i=0 ; i<n ; i++){
+        printf("value %d prioriy %d", data[i],prio[i]);
+    }
+}
+int main(){
+    insert(10,3);
+    insert(5,1);
+    insert(8,2);
+    display();
+    Delete();
+    display();
+    return 0;
+
+}
