@@ -1,0 +1,78 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+#define SIZE 100
+
+char stack[SIZE];
+int top = -1;
+
+void push(char ch) {
+    stack[++top] = ch;
+}
+
+char pop() {
+    return stack[top--];
+}
+
+char peek() {
+    return stack[top];
+}
+
+int isEmpty() {
+    return top == -1;
+}
+
+
+int precedence(char op) {
+    switch (op) {
+        case '+':
+        case '-': return 1;
+        case '*':
+        case '/': return 2;
+        case '(': return 0;
+    }
+    return -1;
+}
+
+void infixToPostfix(char* infix, char* postfix) {
+    int i = 0, j = 0;
+    char ch;
+
+    while ((ch = infix[i++]) != '\0') {
+        if (isdigit(ch) || isalpha(ch)) {
+            postfix[j++] = ch;
+        } else if (ch == '(') {
+            push(ch);
+        } else if (ch == ')') {
+            while (!isEmpty() && peek() != '(') {
+                postfix[j++] = pop();
+            }
+            if (!isEmpty()) pop(); // Remove '('
+        } else { // Operator
+            while (!isEmpty() && precedence(peek()) >= precedence(ch)) {
+                postfix[j++] = pop();
+            }
+            push(ch);
+        }
+    }
+
+    while (!isEmpty()) {
+        postfix[j++] = pop();
+    }
+
+    postfix[j] = '\0';
+}
+
+int main() {
+    char infix[SIZE], postfix[SIZE];
+
+    printf("Enter infix expression: ");
+    scanf("%s", infix);
+
+    infixToPostfix(infix, postfix);
+
+    printf("Postfix expression: %s\n", postfix);
+
+    return 0;
+}
