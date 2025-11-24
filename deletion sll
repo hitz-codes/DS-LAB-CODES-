@@ -1,0 +1,82 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* head = NULL;
+
+void createList() {
+    struct Node* n1 = (struct Node*)malloc(sizeof(struct Node));
+    struct Node* n2 = (struct Node*)malloc(sizeof(struct Node));
+    struct Node* n3 = (struct Node*)malloc(sizeof(struct Node));
+    n1->data = 10; n1->next = n2;
+    n2->data = 20; n2->next = n3;
+    n3->data = 30; n3->next = NULL;
+    head = n1;
+}
+
+void deleteFirst() {
+    if (head == NULL) return;
+    struct Node* temp = head;
+    head = head->next;
+    free(temp);
+}
+
+void deleteLast() {
+    if (head == NULL) return;
+    if (head->next == NULL) {
+        free(head);
+        head = NULL;
+        return;
+    }
+    struct Node* temp = head;
+    while (temp->next->next != NULL) temp = temp->next;
+    free(temp->next);
+    temp->next = NULL;
+}
+
+void deleteSpecified(int key) {
+    if (head == NULL) return;
+    if (head->data == key) {
+        struct Node* temp = head;
+        head = head->next;
+        free(temp);
+        return;
+    }
+    struct Node* temp = head;
+    while (temp->next != NULL && temp->next->data != key) temp = temp->next;
+    if (temp->next == NULL) return;
+    struct Node* del = temp->next;
+    temp->next = temp->next->next;
+    free(del);
+}
+
+void display() {
+    struct Node* temp = head;
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    int choice, key;
+    createList();
+    while (1) {
+        printf("1.Delete First\n2.Delete Last\n3.Delete Specified\n4.Display\n5.Exit\n");
+        scanf("%d", &choice);
+        switch (choice) {
+            case 1: deleteFirst(); break;
+            case 2: deleteLast(); break;
+            case 3: printf("Enter element: "); scanf("%d", &key); deleteSpecified(key); break;
+            case 4: display(); break;
+            case 5: exit(0);
+            default: printf("Invalid choice\n");
+        }
+    }
+    return 0;
+}
